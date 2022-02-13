@@ -4,16 +4,22 @@
     </div>
     <div id="user-detail" class="grid place-content-center p-4">
         <div>
-            <h1 class="text-center">{{user?.name}}</h1>
+            <h1 class="text-center hover:tracking-wide transition-all">{{user?.name}}</h1>
         </div>
         <mat-card class="shadow-2xl rounded-3xl" style="border-radius: 2em;">
             <div class="flex flex-col p-4" style="height: 400px; width: 300px;">
                 <div class="text-center text-3xl font-bold">
                     Token Number
                 </div>
-                <div class="flex-1 grid place-content-center text-9xl font-bold">
+                <div class="flex-1 grid place-content-center text-9xl font-bold"
+                    *ngIf="!employeesLoading; else elseTokenLoading">
                     {{token}}
                 </div>
+                <ng-template #elseTokenLoading>
+                    <div class="grid place-content-center flex-1">
+                        <mat-spinner diameter="50"></mat-spinner>
+                    </div>
+                </ng-template>
             </div>
         </mat-card>
     </div>
@@ -32,13 +38,13 @@
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                class="hover:bg-green-300 hover:scale-105 transition-all">
+                class="hover:scale-105 hover:bg-slate-50 transition-all cursor-pointer">
             </tr>
         </table>
     </div>
     <ng-template #elseEmployeeLoading>
-        <div>
-            <mat-progress-spinner></mat-progress-spinner>
+        <div class="grid place-content-center p-16">
+            <mat-spinner diameter="50"></mat-spinner>
         </div>
     </ng-template>
 </div>

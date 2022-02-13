@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AuthResponse } from '../auth/auth-response';
 import { EmployeeService } from '../employee/employee.service';
 
@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   subscription?: Subscription;
   error?: string;
   employeesLoading?: boolean = true;
-
+  canAttend$?: Observable<boolean>;
 
   displayedColumns: string[] = ['name', 'number'];
 
@@ -27,7 +27,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.user = this.employeeService.getCurrentUser();
-    this.subscription = this.employeeService.getAllEmployees()
+    this.canAttend$ = this.employeeService.getCanAttend$();
+    this.subscription = this.employeeService.getAllEmployees$()
       .subscribe(
         {
           next: (res) => {
@@ -39,7 +40,7 @@ export class HomeComponent implements OnInit, OnDestroy {
                   this.token = i + 1;
                 }
                 this.employees.push({ position: i + 1, ...employee })
-                // this.employeesLoading = false;
+                this.employeesLoading = false;
               }
             }
           },
