@@ -1,0 +1,24 @@
+<div class="grid place-content-center h-screen">
+    <h1>Login</h1>
+    <div *ngIf="!!error" class="w-full bg-red-300 p-4 mb-4">
+        {{error}}
+    </div>
+    <form autocomplete="false" [formGroup]="requestModel" autocomplete="off">
+        <mat-form-field class="w-full" appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" required>
+        </mat-form-field>
+        <mat-form-field class="w-full" appearance="outline">
+            <mat-label>Number</mat-label>
+            <input matInput formControlName="number" required>
+        </mat-form-field>
+        <button mat-raised-button color="primary" class="w-full" (click)="onSubmit()">
+            <div class="p-2">
+                Login
+            </div>
+        </button>
+    </form>
+    <div class="text-base p-4 text-center">
+        Don't have an account? <a routerLink="../register">Sign up</a>
+    </div>
+</div>
