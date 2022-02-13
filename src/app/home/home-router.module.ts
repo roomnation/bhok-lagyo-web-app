@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Route, RouterModule } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { AttendComponent } from './attend/attend.component';
+import { AttendGuard } from './attend.guard';
 
 const routes: Route[] = [
-  { path: '', component: HomeComponent },
-  { path: 'attend', component: AttendComponent }
+  { path: 'home', component: HomeComponent, canActivate: [AttendGuard] },
+  { path: 'attend', component: AttendComponent, canActivate: [AttendGuard] },
+  { path: '', redirectTo: 'home', pathMatch: 'full', },
 ]
 
 @NgModule({

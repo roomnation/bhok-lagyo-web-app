@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 import { Observable, Subscription } from 'rxjs';
 import { AuthResponse } from '../auth/auth-response';
 import { EmployeeService } from '../employee/employee.service';
@@ -16,6 +17,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   error?: string;
   employeesLoading?: boolean = true;
   canAttend$?: Observable<boolean>;
+  faIcon = faCoffee;
 
   displayedColumns: string[] = ['name', 'number'];
 
@@ -47,5 +49,4 @@ export class HomeComponent implements OnInit, OnDestroy {
           error: (err) => this.error = err
         });
   }
-
 }

@@ -1,5 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthRequest } from './auth-request';
@@ -9,10 +10,11 @@ import { AuthResponse } from './auth-response';
   providedIn: 'root'
 })
 export class AuthService {
-  user?: AuthResponse;
+  currentUser?: AuthResponse;
   err?: string;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+    private router: Router) {
 
   }
 
@@ -22,20 +24,42 @@ export class AuthService {
       .pipe(
         tap(authRes => this.handleSuccessResponse(authRes)),
         catchError((err: HttpErrorResponse) => {
-          return throwError(() => err.error);
+          if(err.statusText==='ok'){
+            return throwError(() => err.error);
+          }else{
+            console.log(err);
+            return throwError(() => 'Something went wrong. Please try again later.');
+          }
         })
       );
   }
 
   logout(): void {
-    this.user = undefined;
+    this.currentUser = undefined;
     this.err = undefined;
     localStorage.removeItem('user');
+    this.router.navigate(['auth']);
+  }
+
+  register(authRequest: AuthRequest): Observable<AuthResponse> {
+    return this.http
+      .post<AuthResponse>(`${environment.baseURL}/employee`, authRequest)
+      .pipe(
+        tap(authRes => this.handleSuccessResponse(authRes)),
+        catchError((err: HttpErrorResponse) => {
+          if(err.statusText==='ok'){
+            return throwError(() => err.error);
+          }else{
+            console.log(err);
+            return throwError(() => 'Something went wrong. Please try again later.');
+          }
+        })
+      );
   }
 
   private handleSuccessResponse(authResponse: AuthResponse) {
     localStorage.setItem('user', JSON.stringify(authResponse));
-    this.user = authResponse;
+    this.currentUser = authResponse;
   }
 
   autologin(): void {
@@ -46,7 +70,7 @@ export class AuthService {
         if (!user) {
           return;
         }
-        this.user = user;
+        this.currentUser = user;
         this.err = undefined;
       }
     } catch (e) {

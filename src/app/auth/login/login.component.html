@@ -1,24 +1,32 @@
-<div class="grid place-content-center h-screen">
-    <h1>Login</h1>
-    <div *ngIf="!!error" class="w-full bg-red-300 p-4 mb-4">
-        {{error}}
-    </div>
+<div class="grid place-content-center h-screen bg-slate-100">
     <form autocomplete="false" [formGroup]="requestModel" autocomplete="off">
-        <mat-form-field class="w-full" appearance="outline">
-            <mat-label>Name</mat-label>
-            <input matInput formControlName="name" required>
-        </mat-form-field>
-        <mat-form-field class="w-full" appearance="outline">
-            <mat-label>Number</mat-label>
-            <input matInput formControlName="number" required>
-        </mat-form-field>
-        <button mat-raised-button color="primary" class="w-full" (click)="onSubmit()">
-            <div class="p-2">
-                Login
+        <div class="w-96 bg-white py-8 px-6 rounded-xl my-8 flex flex-col" style="border-width: 1px;">
+            <div class="text-2xl font-medium text-center mb-8">Login</div>
+            <div *ngIf="!!error" class="w-full bg-red-300 p-4 mb-4">
+                {{error}}
             </div>
-        </button>
+            <mat-form-field class="w-full" appearance="outline">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" required>
+            </mat-form-field>
+            <mat-form-field class="w-full" appearance="outline">
+                <mat-label>Number</mat-label>
+                <input matInput formControlName="number" required type="number">
+            </mat-form-field>
+            <button mat-raised-button color="primary" class="w-full" (click)="onSubmit()">
+                <div class="p-2">
+                    Login
+                </div>
+            </button>
+            <div class="py-8">
+                <mat-divider></mat-divider>
+            </div>
+            <div class="text-sm text-center">
+                Don't have an account? | <a routerLink="../register" class="text-blue-600">Sign up</a>
+            </div>
+        </div>
     </form>
-    <div class="text-base p-4 text-center">
-        Don't have an account? <a routerLink="../register">Sign up</a>
+    <div>
+        <app-footer></app-footer>
     </div>
 </div>

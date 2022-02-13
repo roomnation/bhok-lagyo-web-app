@@ -8,13 +8,16 @@ import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatInputModule } from '@angular/material/input';
 
 import { AttendComponent } from './attend/attend.component';
+import { SharedModule } from '../shared/shared.module';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
     HomeComponent,
-    AttendComponent
+    AttendComponent,
   ],
   imports: [
     CommonModule,
@@ -23,7 +26,10 @@ import { AttendComponent } from './attend/attend.component';
     MatListModule,
     MatTableModule,
     MatCardModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatInputModule,
+    SharedModule,
+    FontAwesomeModule
   ]
 })
 export class HomeModule { }

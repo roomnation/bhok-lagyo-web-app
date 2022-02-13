@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, of, Subscriber, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthResponse } from '../auth/auth-response';
 import { AuthService } from '../auth/auth.service';
@@ -10,6 +10,7 @@ import { EmployeeResponse } from './employee-response';
   providedIn: 'root'
 })
 export class EmployeeService {
+
   private canAttend$?: BehaviorSubject<boolean>;
   private employees$?: BehaviorSubject<AuthResponse[]>;
 
@@ -17,12 +18,27 @@ export class EmployeeService {
     return this.canAttend$!;
   }
 
+  attend(): Observable<boolean> {
+    return this.httpClient
+      .put<boolean>(`${environment.baseURL}/present/employee`, this.authService.currentUser)
+      .pipe(
+        catchError((err) => {
+          if (err.statusText === 'ok') {
+            return throwError(() => err.error);
+          } else {
+            console.log(err);
+            return throwError(() => 'Something went wrong. Please try again later.');
+          }
+        })
+      );
+  }
+
   getAllEmployees$(): Observable<AuthResponse[] | undefined> {
     return this.employees$!;
   }
 
   getCurrentUser(): AuthResponse | undefined {
-    return this.authService.user;
+    return this.authService.currentUser;
   }
 
   constructor(private authService: AuthService,

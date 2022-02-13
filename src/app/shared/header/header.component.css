@@ -1,0 +1,4 @@
+.nav-links {
+    @apply grid place-content-center transition-all cursor-pointer
+    text-base font-medium;
+}
