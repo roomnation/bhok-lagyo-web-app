@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { faCoffee } from '@fortawesome/free-solid-svg-icons';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { AuthResponse } from '../auth/auth-response';
 import { EmployeeService } from '../employee/employee.service';
 
@@ -12,29 +13,37 @@ import { EmployeeService } from '../employee/employee.service';
 export class HomeComponent implements OnInit, OnDestroy {
   user?: AuthResponse;
   employees?: AuthResponse[] = [];
-  token?: number = 10;
-  subscription?: Subscription;
+  token?: number;
+  employeesSubscription?: Subscription;
   error?: string;
   employeesLoading?: boolean = true;
-  canAttend$?: Observable<boolean>;
   faIcon = faCoffee;
+  canAttendSubscription?: Subscription;
+  filteredEmployees?: AuthResponse[] = [];
 
   displayedColumns: string[] = ['name', 'number'];
 
-  constructor(private employeeService: EmployeeService) { }
+  constructor(private employeeService: EmployeeService,
+    private router: Router) { }
 
   ngOnDestroy(): void {
-    this.subscription?.unsubscribe();
+    this.employeesSubscription?.unsubscribe();
+    this.canAttendSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
     this.user = this.employeeService.getCurrentUser();
-    this.canAttend$ = this.employeeService.getCanAttend$();
-    this.subscription = this.employeeService.getAllEmployees$()
+    this.canAttendSubscription = this.employeeService.getTimestamp$()
+      .subscribe((v) => {
+        if (new Date(v).getHours() < 11) {
+          this.router.navigate(['/attend']);
+        }
+      });
+    this.employeesSubscription = this.employeeService.getAllEmployees$()
       .subscribe(
         {
           next: (res) => {
-            if (res) {
+            if (res != undefined) {
               this.employees = [];
               for (let i = 0; i < res.length; i++) {
                 const employee = res[i];
@@ -42,11 +51,16 @@ export class HomeComponent implements OnInit, OnDestroy {
                   this.token = i + 1;
                 }
                 this.employees.push({ position: i + 1, ...employee })
-                this.employeesLoading = false;
               }
+              this.filteredEmployees = this.employees;
+              this.employeesLoading = false;
             }
           },
           error: (err) => this.error = err
         });
+  }
+
+  onSearch(event: any) {
+    this.filteredEmployees = this.employees?.filter(employee => employee.name?.toLowerCase().includes(event.target.value.toLowerCase()));
   }
 }

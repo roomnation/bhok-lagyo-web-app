@@ -2,8 +2,13 @@
     <form autocomplete="false" [formGroup]="requestModel" autocomplete="off">
         <div class="w-96 bg-white py-8 px-6 rounded-xl my-8 flex flex-col" style="border-width: 1px;">
             <div class="text-2xl font-medium text-center mb-8">Login</div>
-            <div *ngIf="!!error" class="w-full bg-red-300 p-4 mb-4">
+            <div *ngIf="!!error" class="w-full bg-red-300 p-4 mb-4 cursor-pointer"
+                (click)="clearMsg()">
                 {{error}}
+            </div>
+            <div *ngIf="!!msg" class="w-full bg-green-200 p-4 mb-4 cursor-pointer"
+                (click)="clearMsg()">
+                {{msg}}
             </div>
             <mat-form-field class="w-full" appearance="outline">
                 <mat-label>Name</mat-label>
