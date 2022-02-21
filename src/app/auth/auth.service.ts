@@ -12,10 +12,10 @@ import { AuthResponse } from './auth-response';
 export class AuthService {
   currentUser?: AuthResponse;
   err?: string;
+  msg?: string;
 
   constructor(private http: HttpClient,
     private router: Router) {
-
   }
 
   login(authRequest: AuthRequest): Observable<AuthResponse> {
@@ -24,9 +24,10 @@ export class AuthService {
       .pipe(
         tap(authRes => this.handleSuccessResponse(authRes)),
         catchError((err: HttpErrorResponse) => {
-          if(err.statusText==='ok'){
+          if (err.statusText.toLowerCase() === 'ok') {
+            this.msg = undefined;
             return throwError(() => err.error);
-          }else{
+          } else {
             console.log(err);
             return throwError(() => 'Something went wrong. Please try again later.');
           }
@@ -43,13 +44,15 @@ export class AuthService {
 
   register(authRequest: AuthRequest): Observable<AuthResponse> {
     return this.http
-      .post<AuthResponse>(`${environment.baseURL}/employee`, authRequest)
+      .post<AuthResponse>(`${environment.baseURL}/register/employee`, authRequest)
       .pipe(
-        tap(authRes => this.handleSuccessResponse(authRes)),
+        tap(() => {
+          this.msg = 'Register successful! Please login.'
+        }),
         catchError((err: HttpErrorResponse) => {
-          if(err.statusText==='ok'){
+          if (err.statusText.toLowerCase() === 'ok') {
             return throwError(() => err.error);
-          }else{
+          } else {
             console.log(err);
             return throwError(() => 'Something went wrong. Please try again later.');
           }
@@ -60,6 +63,7 @@ export class AuthService {
   private handleSuccessResponse(authResponse: AuthResponse) {
     localStorage.setItem('user', JSON.stringify(authResponse));
     this.currentUser = authResponse;
+    this.clearMsg();
   }
 
   autologin(): void {
@@ -77,5 +81,13 @@ export class AuthService {
       this.err = 'Got error while getting user from session';
       console.log(e);
     }
+  }
+
+  clearMsg() {
+    this.msg = undefined;
+  }
+
+  clearErrMsg() {
+    this.err = undefined;
   }
 }

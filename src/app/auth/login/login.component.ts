@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthResponse } from '../auth-response';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -15,11 +14,13 @@ export class LoginComponent implements OnInit {
     'number': new FormControl('')
   })
   error?: string;
+  msg?: string;
 
   constructor(private authService: AuthService,
     private router: Router) { }
 
   ngOnInit(): void {
+    this.msg = this.authService.msg;
   }
 
 
@@ -39,5 +40,12 @@ export class LoginComponent implements OnInit {
           complete: () => console.info('complete')
         });
     }
+  }
+
+  clearMsg() {
+    this.msg = undefined;
+    this.error = undefined;
+    this.authService.clearMsg();
+    this.authService.clearErrMsg();
   }
 }

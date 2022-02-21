@@ -10,7 +10,6 @@ export class AppComponent implements OnInit {
   title = 'bhok-lagyo';
 
   constructor(private authService: AuthService) {
-
   }
 
   ngOnInit(): void {

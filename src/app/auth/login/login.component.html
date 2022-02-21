@@ -2,16 +2,21 @@
     <form autocomplete="false" [formGroup]="requestModel" autocomplete="off">
         <div class="w-96 bg-white py-8 px-6 rounded-xl my-8 flex flex-col" style="border-width: 1px;">
             <div class="text-2xl font-medium text-center mb-8">Login</div>
-            <div *ngIf="!!error" class="w-full bg-red-300 p-4 mb-4">
+            <div *ngIf="!!error" class="w-full bg-red-300 p-4 mb-4 cursor-pointer"
+                (click)="clearMsg()">
                 {{error}}
+            </div>
+            <div *ngIf="!!msg" class="w-full bg-green-200 p-4 mb-4 cursor-pointer"
+                (click)="clearMsg()">
+                {{msg}}
             </div>
             <mat-form-field class="w-full" appearance="outline">
                 <mat-label>Name</mat-label>
-                <input matInput formControlName="name" required>
+                <input id="name" matInput formControlName="name" required>
             </mat-form-field>
             <mat-form-field class="w-full" appearance="outline">
                 <mat-label>Number</mat-label>
-                <input matInput formControlName="number" required type="number">
+                <input id="number" matInput formControlName="number" required type="number">
             </mat-form-field>
             <button mat-raised-button color="primary" class="w-full" (click)="onSubmit()">
                 <div class="p-2">

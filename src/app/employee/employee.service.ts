@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthResponse } from '../auth/auth-response';
 import { AuthService } from '../auth/auth.service';
@@ -10,20 +10,18 @@ import { EmployeeResponse } from './employee-response';
   providedIn: 'root'
 })
 export class EmployeeService {
+  private timestamp$?: BehaviorSubject<number>;
 
-  private canAttend$?: BehaviorSubject<boolean>;
-  private employees$?: BehaviorSubject<AuthResponse[]>;
-
-  getCanAttend$(): BehaviorSubject<boolean> {
-    return this.canAttend$!;
+  getTimestamp$(): BehaviorSubject<number> {
+    return this.timestamp$!;
   }
 
   attend(): Observable<boolean> {
     return this.httpClient
-      .put<boolean>(`${environment.baseURL}/present/employee`, this.authService.currentUser)
+      .post<boolean>(`${environment.baseURL}/present/employee`, this.authService.currentUser)
       .pipe(
         catchError((err) => {
-          if (err.statusText === 'ok') {
+          if (err.statusText.toLowerCase() === 'ok') {
             return throwError(() => err.error);
           } else {
             console.log(err);
@@ -34,7 +32,21 @@ export class EmployeeService {
   }
 
   getAllEmployees$(): Observable<AuthResponse[] | undefined> {
-    return this.employees$!;
+    const date = this.timestamp$?.value ?
+      new Date(this.timestamp$?.value) :
+      new Date();
+
+    date.setHours(0);
+    date.setMinutes(0);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+    return this.httpClient
+      .get<EmployeeResponse>(`${environment.baseURL}/present/employee/${date.getTime()}`)
+      .pipe(
+        map((v) => {
+          return v.values ?? [];
+        }),
+      )
   }
 
   getCurrentUser(): AuthResponse | undefined {
@@ -43,29 +55,10 @@ export class EmployeeService {
 
   constructor(private authService: AuthService,
     private httpClient: HttpClient) {
-    this.initializeCanAttend$();
-    this.initializeEmployees$();
+    this.initializeTimestamp$();
   }
 
-  initializeEmployees$() {
-    const json = localStorage.getItem('employees');
-    if (json) {
-      const employees: AuthResponse[] = JSON.parse(json);
-      this.employees$ = new BehaviorSubject<AuthResponse[]>(employees);
-    } else {
-      this.employees$ = new BehaviorSubject<AuthResponse[]>([]);
-    }
-    this.httpClient.get<EmployeeResponse>(`${environment.baseURL}/employee`)
-      .subscribe({
-        next: (v) => {
-          this.employees$?.next(v.values ?? []);
-          localStorage.setItem('employees', JSON.stringify(this.employees$?.getValue()));
-        },
-        error: (err) => this.employees$?.error(err)
-      })
-  }
-
-  private initializeCanAttend$() {
+  private initializeTimestamp$() {
     const currentLocalTime = new Date();
     this.initializeToLocalTime(currentLocalTime);
     this.httpClient.get<number>(`${environment.baseURL}/timestamp`)
@@ -81,24 +74,24 @@ export class EmployeeService {
 
   private handleServerError() {
     const nextEligibleTime = this.get11am(new Date());
-    if (!this.canAttend$?.getValue()) {
+    if (!this.timestamp$?.getValue()) {
       setTimeout(() => {
-        this.canAttend$?.next(false);
+        const d = this.get11am(new Date());
+        this.timestamp$?.next(d.getTime());
       }, nextEligibleTime.getTime() - new Date().getTime());
     }
   }
 
   private handleServerTimestamp(v: number) {
-    const currentTime = new Date(v);
-    console.log('Server Timestamp : ', currentTime);
-    if (currentTime.getHours() >= 11) {
-      this.canAttend$?.next(false);
-    } else {
-      this.canAttend$?.next(true);
+    console.log('Server time loaded.');
+    const serverTime = new Date(v);
+    console.log('Server Timestamp : ', serverTime);
+    this.timestamp$?.next(serverTime.getTime());
+    if (serverTime.getHours() < 11) {
       const nextEligibleTime = this.get11am(new Date());
       setTimeout(() => {
-        this.canAttend$?.next(false);
-      }, nextEligibleTime.getTime() - currentTime.getTime());
+        this.timestamp$?.next(nextEligibleTime.getTime());
+      }, nextEligibleTime.getTime() - serverTime.getTime());
     }
   }
 
@@ -112,10 +105,6 @@ export class EmployeeService {
   }
 
   private initializeToLocalTime(currentLocalTime: Date) {
-    if (currentLocalTime.getHours() >= 11) {
-      this.canAttend$ = new BehaviorSubject<boolean>(false);
-    } else {
-      this.canAttend$ = new BehaviorSubject<boolean>(true);
-    }
+    this.timestamp$ = new BehaviorSubject(currentLocalTime.getTime());
   }
 }
