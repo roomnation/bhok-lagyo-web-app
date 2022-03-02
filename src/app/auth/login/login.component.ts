@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit {
   })
   error?: string;
   msg?: string;
+  submittingForm?: boolean = false;
 
   constructor(private authService: AuthService,
     private router: Router) { }
@@ -25,20 +26,25 @@ export class LoginComponent implements OnInit {
 
 
   onSubmit() {
-    const authRequest = {
-      name: this.requestModel.value.name,
-      number: +this.requestModel.value.number
-    }
-    if (this.requestModel.valid) {
-      this.authService
-        .login(authRequest)
-        .subscribe({
-          next: (v) => {
-            this.router.navigate(['/home'])
-          },
-          error: (e) => this.error = e,
-          complete: () => console.info('complete')
-        });
+    if (!this.submittingForm) {
+      const authRequest = {
+        name: this.requestModel.value.name,
+        number: +this.requestModel.value.number
+      }
+      if (this.requestModel.valid) {
+        this.submittingForm = true;
+        this.authService
+          .login(authRequest)
+          .subscribe({
+            next: (v) => {
+              this.router.navigate(['/home'])
+            },
+            error: (e) => this.error = e,
+            complete: () => {
+              this.submittingForm = false;
+            }
+          });
+      }
     }
   }
 

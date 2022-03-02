@@ -1,8 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnChanges, OnDestroy, OnInit, QueryList, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { faCoffee } from '@fortawesome/free-solid-svg-icons';
-import { Subscription } from 'rxjs';
+import { map, Subscription } from 'rxjs';
 import { AuthResponse } from '../auth/auth-response';
+import { BlacklistService } from '../blacklist.service';
 import { EmployeeService } from '../employee/employee.service';
 
 @Component({
@@ -20,15 +21,21 @@ export class HomeComponent implements OnInit, OnDestroy {
   faIcon = faCoffee;
   canAttendSubscription?: Subscription;
   filteredEmployees?: AuthResponse[] = [];
+  @ViewChild('tokenRef') tokenRef?: ElementRef;
+  @ViewChild('dateRef') dateRef?: ElementRef;
+  dateValue?: string;
+  monitorTimeout?: any;
 
   displayedColumns: string[] = ['name', 'number'];
 
   constructor(private employeeService: EmployeeService,
-    private router: Router) { }
+    private router: Router,
+    private blacklistService: BlacklistService) { }
 
   ngOnDestroy(): void {
     this.employeesSubscription?.unsubscribe();
     this.canAttendSubscription?.unsubscribe();
+    if (this.monitorTimeout) clearTimeout(this.monitorTimeout);
   }
 
   ngOnInit(): void {
@@ -58,6 +65,30 @@ export class HomeComponent implements OnInit, OnDestroy {
           },
           error: (err) => this.error = err
         });
+    this.monitorInpection();
+  }
+
+  monitorInpection() {
+    console.log('Monitoring inspection');
+    this.monitorTimeout = setInterval(() => {
+      const tokenRefValue = this.tokenRef?.nativeElement.textContent?.trim();
+      const newDateValue = this.dateRef?.nativeElement.textContent?.trim();
+      if ((tokenRefValue && tokenRefValue != this.token) ||
+        (this.dateValue && this.dateValue != newDateValue)) {
+        this.blacklistService.write({
+          ...this.user,
+          time: new Date()
+        });
+        this.router.navigate(['/rekt']);
+      } else {
+      }
+      this.dateValue = newDateValue;
+    }, 1000);
+  }
+
+  getDate() {
+    return this.employeeService.getTimestamp$()
+      .pipe(map(v => new Date(v)));
   }
 
   onSearch(event: any) {

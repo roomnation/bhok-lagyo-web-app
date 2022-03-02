@@ -9,8 +9,13 @@
                         Token Number
                     </div>
                     <div class="flex-1 grid place-content-center text-9xl font-normal text-gray-600
-                    " *ngIf="!employeesLoading; else elseTokenLoading">
+                    " *ngIf="!employeesLoading; else elseTokenLoading" #tokenRef>
                         {{token ?? ''}}
+                    </div>
+                    <div class="grid place-content-center">
+                        <div class="font-bold bg-red-50 border-red-200 border w-fit p-2 rounded-sm" #dateRef>
+                            {{ getDate() | async | date:'fullDate' }}
+                        </div>
                     </div>
                     <ng-template #elseTokenLoading>
                         <div class="grid place-content-center flex-1">

@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
@@ -25,6 +26,7 @@ import { SharedModule } from '../shared/shared.module';
     MatInputModule,
     MatButtonModule,
     MatDividerModule,
+    MatProgressSpinnerModule,
     HttpClientModule,
     ReactiveFormsModule,
     SharedModule

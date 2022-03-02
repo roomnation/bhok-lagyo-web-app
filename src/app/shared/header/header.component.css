@@ -2,3 +2,6 @@
     @apply grid place-content-center transition-all cursor-pointer
     text-base font-medium;
 }
+
+#app-title:hover::after {
+}
