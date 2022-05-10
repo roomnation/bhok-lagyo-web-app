@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnChanges, OnDestroy, OnInit, QueryList, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 import { map, Subscription } from 'rxjs';
@@ -83,7 +83,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       } else {
       }
       this.dateValue = newDateValue;
-    }, 1000);
+    }, 250);
   }
 
   getDate() {
