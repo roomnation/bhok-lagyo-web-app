@@ -20,16 +20,16 @@
     <ng-container *ngIf="messages$ | async as messages">
       <ng-container *ngFor="let msg of messages">
         <!-- action message -->
-        <div *ngIf="msg.messageType==1" class="text-base font-light text-gray-500">Kshitij attended!</div>
+        <div *ngIf="msg.messageType==1" class="text-base font-light text-gray-500">{{msg.text}}</div>
         <!-- text message by other sender-->
         <div *ngIf="msg.messageType==2 && !msg.sentByMe" class="flex flex-row space-x-2 items-center">
-          <div>Pawan Gurung</div>
-          <div class="border-2 rounded-lg p-2">Guys! aaja futsal jane ho?</div>
+          <div>{{msg.displayName}}</div>
+          <div class="border-2 rounded-lg p-2">{{msg.text}}</div>
         </div>
         <!-- text message by me-->
         <div *ngIf="msg.messageType==2 && msg.sentByMe" class="flex flex-row-reverse space-x-4">
           <div class="rounded-lg p-2 bg-blue-400 text-white">
-            Guys! aaja futsal jane ho?
+            {{msg.text}}
           </div>
         </div>
       </ng-container>
