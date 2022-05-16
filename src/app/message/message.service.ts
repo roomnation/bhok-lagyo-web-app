@@ -13,7 +13,6 @@ export class MessageService {
   private collection: string; //collection where message threads are stored
   private all: string; //document id for public message thread
   private subCollection: string; //collections where messages are stored
-  private paginateField: string;
 
   //collection (message-thread) -> specific thread (all/public) -> sub collection (specific message id)
 
@@ -42,7 +41,7 @@ export class MessageService {
   }
 
   private async getMessage(): Promise<Message[]> {
-    const q = query(this.getMessageCollection(this.all), orderBy(this.paginateField, "desc"), limit(20));
+    const q = query(this.getMessageCollection(this.all), orderBy("timestamp", "desc"), limit(20));
     const querySnapshot = await getDocs(q);
     const messages: Message[] = [];
     querySnapshot.forEach((doc) => messages.push(doc.data()));
@@ -54,7 +53,6 @@ export class MessageService {
     this.collection = environment.message.collection;
     this.subCollection = environment.message.subCollection;
     this.all = environment.message.threads.all;
-    this.paginateField = ;
   }
 }
 
