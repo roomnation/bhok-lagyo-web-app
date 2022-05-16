@@ -1,65 +1,86 @@
 <app-header></app-header>
+<div id="message">
+  <app-message></app-message>
+</div>
+<div id="message-btn">
+        <button mat-fab color="primary">
+          <mat-icon>message</mat-icon>
+        </button>
+</div>
 <div class="grid grid-flow-row place-content-center bg-slate-100">
-    <div class="p-8 w-96">
-        <div id="user-detail" class="grid place-content-center">
-            <mat-card class="w-80" style="border-radius: 2em;">
-                <div class="flex flex-col py-6" style="height: 400px;">
-                    <div class="text-center text-3xl font-bold px-8
-                    hover:tracking-wide transition-all">
-                        Token Number
-                    </div>
-                    <div class="flex-1 grid place-content-center text-9xl font-normal text-gray-600
-                    " *ngIf="!employeesLoading; else elseTokenLoading" #tokenRef>
-                        {{token ?? ''}}
-                    </div>
-                    <div class="grid place-content-center">
-                        <div class="font-bold bg-red-50 border-red-200 border w-fit p-2 rounded-sm" #dateRef>
-                            {{ getDate() | async | date:'fullDate' }}
-                        </div>
-                    </div>
-                    <ng-template #elseTokenLoading>
-                        <div class="grid place-content-center flex-1">
-                            <mat-spinner diameter="50"></mat-spinner>
-                        </div>
-                    </ng-template>
-                </div>
-            </mat-card>
+  <div class="p-8 w-96">
+    <div id="user-detail" class="grid place-content-center">
+      <mat-card class="w-80" style="border-radius: 2em">
+        <div class="flex flex-col py-6" style="height: 400px">
+          <div
+            class="text-center text-3xl font-bold px-8 hover:tracking-wide transition-all"
+          >
+            Token Number
+          </div>
+          <div
+            class="flex-1 grid place-content-center text-9xl font-normal text-gray-600"
+            *ngIf="!employeesLoading; else elseTokenLoading"
+            #tokenRef
+          >
+            {{ token ?? "" }}
+          </div>
+          <div class="grid place-content-center">
+            <div
+              class="font-bold bg-red-50 border-red-200 border w-fit p-2 rounded-sm"
+              #dateRef
+            >
+              {{ getDate() | async | date: "fullDate" }}
+            </div>
+          </div>
+          <ng-template #elseTokenLoading>
+            <div class="grid place-content-center flex-1">
+              <mat-spinner diameter="50"></mat-spinner>
+            </div>
+          </ng-template>
         </div>
-        <div class="mt-8">
-            <form autocomplete="off">
-                <mat-form-field class="w-full" appearance="outline">
-                    <mat-label>Search</mat-label>
-                    <input matInput (input)="onSearch($event)">
-                </mat-form-field>
-            </form>
-        </div>
-        <div id="user-list" *ngIf="!employeesLoading; else elseEmployeeLoading">
-            <table mat-table [dataSource]="filteredEmployees ?? []" style="width: 100%;">
-
-                <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef> No. </th>
-                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                </ng-container>
-
-                <ng-container matColumnDef="number">
-                    <th mat-header-cell *matHeaderCellDef> number </th>
-                    <td mat-cell *matCellDef="let element"> {{element.position}} </td>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                    class="hover:scale-105 transition-all cursor-pointer">
-                </tr>
-            </table>
-        </div>
-        <div class="mt-8 font-light">
-            <strong>Note : </strong>If you didn't attend before 11 AM, you won't be able to get a token.
-        </div>
+      </mat-card>
     </div>
-    <app-footer></app-footer>
-    <ng-template #elseEmployeeLoading>
-        <div class="grid place-content-center p-16">
-            <mat-spinner diameter="50"></mat-spinner>
-        </div>
-    </ng-template>
+    <div class="mt-8">
+      <form autocomplete="off">
+        <mat-form-field class="w-full" appearance="outline">
+          <mat-label>Search</mat-label>
+          <input matInput (input)="onSearch($event)" />
+        </mat-form-field>
+      </form>
+    </div>
+    <div id="user-list" *ngIf="!employeesLoading; else elseEmployeeLoading">
+      <table
+        mat-table
+        [dataSource]="filteredEmployees ?? []"
+        style="width: 100%"
+      >
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>No.</th>
+          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="number">
+          <th mat-header-cell *matHeaderCellDef>number</th>
+          <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          class="hover:scale-105 transition-all cursor-pointer"
+        ></tr>
+      </table>
+    </div>
+    <div class="mt-8 font-light">
+      <strong>Note : </strong>If you didn't attend before 11 AM, you won't be
+      able to get a token.
+    </div>
+  </div>
+  <app-footer></app-footer>
+  <ng-template #elseEmployeeLoading>
+    <div class="grid place-content-center p-16">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+  </ng-template>
 </div>
