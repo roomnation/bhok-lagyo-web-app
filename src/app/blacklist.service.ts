@@ -18,7 +18,6 @@ export class BlacklistService {
 
   write(arg0: Blacklist) {
     if (!this.addedToBlackList) {
-      console.log('Adding to blacklist');
       setDoc(this.getDocRef(arg0?.id ?? ''), arg0);
       this.addedToBlackList = true;
     }

@@ -6,6 +6,7 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 import { getAnalytics, provideAnalytics } from '@angular/fire/analytics';
+import { AngularFireMessagingModule } from '@angular/fire/compat/messaging';
 import { environment } from 'src/environments/environment';
 
 const FirebaseModules = [
@@ -20,7 +21,8 @@ const FirebaseModules = [
   declarations: [],
   imports: [
     CommonModule,
-    FirebaseModules
+    FirebaseModules,
+    AngularFireMessagingModule
   ],
   exports: [
     FirebaseModules

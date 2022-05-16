@@ -1,6 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 import { map, Subscription } from 'rxjs';
 import { AuthResponse } from '../auth/auth-response';
 import { BlacklistService } from '../blacklist.service';
@@ -18,7 +17,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   employeesSubscription?: Subscription;
   error?: string;
   employeesLoading?: boolean = true;
-  faIcon = faCoffee;
   canAttendSubscription?: Subscription;
   filteredEmployees?: AuthResponse[] = [];
   @ViewChild('tokenRef') tokenRef?: ElementRef;
@@ -27,6 +25,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   monitorTimeout?: any;
 
   displayedColumns: string[] = ['name', 'number'];
+
+  isMessageOpen = false;
 
   constructor(private employeeService: EmployeeService,
     private router: Router,
