@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['name', 'number'];
 
-  isMessageOpen = true;
+  isMessageOpen = false;
 
   constructor(private employeeService: EmployeeService,
     private router: Router,
