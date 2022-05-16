@@ -10,7 +10,11 @@ export const environment = {
     appId: "1:885703448681:web:ce675f7ad7352d755c6af8",
     measurementId: "G-LFNXFCMLL0"
   },
-  message : {
-    collection: "message-dev"
+  message: {
+    collection: "message-thread",
+    subCollection: "messages",
+    threads: {
+      all: "all$public"
+    },
   }
 };

@@ -1,11 +1,15 @@
 <app-header></app-header>
-<div id="message">
-  <app-message></app-message>
-</div>
-<div id="message-btn">
-        <button mat-fab color="primary">
-          <mat-icon>message</mat-icon>
-        </button>
+<div id="message" class="flex flex-col items-end space-y-4 z-10">
+  <div
+    [ngClass]="{ 'message-closed': !isMessageOpen,
+    'message-opened': isMessageOpen }"
+    class="transition-all duration-300"
+  >
+    <app-message></app-message>
+  </div>
+  <button mat-fab color="primary" (click)="isMessageOpen = !isMessageOpen">
+    <mat-icon>message</mat-icon>
+  </button>
 </div>
 <div class="grid grid-flow-row place-content-center bg-slate-100">
   <div class="p-8 w-96">

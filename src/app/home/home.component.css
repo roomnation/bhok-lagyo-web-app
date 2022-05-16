@@ -1,7 +1,11 @@
-div#message-btn {
-    @apply fixed bottom-0 right-0 m-16
+div#message {
+    @apply fixed bottom-0 right-0 m-12
 }
 
-div#message {
-    @apply fixed bottom-16 right-16
+.message-opened {
+    @apply scale-100 translate-y-0 translate-x-0
+}
+
+.message-closed {
+    @apply scale-0 translate-y-1/2 translate-x-1/2
 }

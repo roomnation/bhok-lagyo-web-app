@@ -15,6 +15,7 @@ import { AttendComponent } from './attend/attend.component';
 import { SharedModule } from '../shared/shared.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MessageComponent } from '../message/message.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { MessageComponent } from '../message/message.component';
     MatInputModule,
     SharedModule,
     FontAwesomeModule,
-    MatIconModule
+    MatIconModule,
+    ReactiveFormsModule,
   ]
 })
 export class HomeModule { }

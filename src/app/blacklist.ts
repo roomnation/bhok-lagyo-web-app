@@ -21,5 +21,4 @@ export class BlacklistConverter implements FirestoreDataConverter<Blacklist> {
             ...snapshot.data()
         }
     }
-
 }

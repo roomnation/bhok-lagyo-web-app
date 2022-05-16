@@ -1,0 +1,38 @@
+<div
+  class="bg-white w-96 rounded-xl shadow-xl flex flex-col-reverse px-4"
+  style="height: 38em"
+>
+  <div>
+    <form (submit)="onSubmit(); $event.preventDefault()" autocomplete="off">
+      <mat-form-field appearance="outline" class="w-full">
+        <input
+          matInput
+          placeholder="message"
+          [formControl]="message"
+          required
+        />
+        <mat-icon matSuffix class="text-blue-500">send</mat-icon>
+      </mat-form-field>
+      <input type="submit" hidden />
+    </form>
+  </div>
+  <div class="flex-1 py-4 overflow-y-auto flex flex-col space-y-4">
+    <ng-container *ngIf="messages$ | async as messages">
+      <ng-container *ngFor="let msg of messages">
+        <!-- action message -->
+        <div *ngIf="msg.messageType==1" class="text-base font-light text-gray-500">Kshitij attended!</div>
+        <!-- text message by other sender-->
+        <div *ngIf="msg.messageType==2 && !msg.sentByMe" class="flex flex-row space-x-2 items-center">
+          <div>Pawan Gurung</div>
+          <div class="border-2 rounded-lg p-2">Guys! aaja futsal jane ho?</div>
+        </div>
+        <!-- text message by me-->
+        <div *ngIf="msg.messageType==2 && msg.sentByMe" class="flex flex-row-reverse space-x-4">
+          <div class="rounded-lg p-2 bg-blue-400 text-white">
+            Guys! aaja futsal jane ho?
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>
