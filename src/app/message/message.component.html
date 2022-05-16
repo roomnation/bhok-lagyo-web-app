@@ -16,7 +16,7 @@
       <input type="submit" hidden />
     </form>
   </div>
-  <div class="flex-1 py-4 overflow-y-auto flex flex-col space-y-4">
+  <div class="flex-1 py-4 overflow-y-auto flex flex-col-reverse space-y-4">
     <ng-container *ngIf="messages$ | async as messages">
       <ng-container *ngFor="let msg of messages">
         <!-- action message -->
