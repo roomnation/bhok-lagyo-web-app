@@ -9,15 +9,19 @@ import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
+import {MatIconModule} from '@angular/material/icon';
 
 import { AttendComponent } from './attend/attend.component';
 import { SharedModule } from '../shared/shared.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MessageComponent } from '../message/message.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     HomeComponent,
     AttendComponent,
+    MessageComponent,
   ],
   imports: [
     CommonModule,
@@ -29,7 +33,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatProgressSpinnerModule,
     MatInputModule,
     SharedModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    MatIconModule,
+    ReactiveFormsModule,
   ]
 })
 export class HomeModule { }
