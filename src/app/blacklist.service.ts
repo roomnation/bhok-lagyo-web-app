@@ -29,7 +29,6 @@ export class BlacklistService {
       getDoc(this.getDocRef(id))
         .then((doc) => {
           const blacklistTimestamp = new Date(((doc.data()?.time as any)?.seconds ?? 0) * 1000);
-          console.log(blacklistTimestamp);
           const serverTimestamp = new Date(this.employeeService.getTimestamp$().value);
           const sameday = blacklistTimestamp.getFullYear() === serverTimestamp.getFullYear() &&
             blacklistTimestamp.getMonth() === serverTimestamp.getMonth() &&

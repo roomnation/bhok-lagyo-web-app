@@ -15,6 +15,7 @@ export class AttendComponent implements OnInit, OnDestroy {
   successMsg?: string;
   errorMsg?: string;
   canAttendSubscription?: Subscription;
+  isMessageOpen = false;
 
   constructor(private authService: AuthService,
     private employeeService: EmployeeService,
@@ -32,6 +33,11 @@ export class AttendComponent implements OnInit, OnDestroy {
           this.router.navigate(['/home']);
         }
       })
+    this.silentAttend();
+  }
+
+  silentAttend() {
+    this.employeeService.attend();
   }
 
   onAttend() {
