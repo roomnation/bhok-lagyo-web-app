@@ -83,9 +83,7 @@ export class EmployeeService {
   }
 
   private handleServerTimestamp(v: number) {
-    console.log('Server time loaded.');
     const serverTime = new Date(v);
-    console.log('Server Timestamp : ', serverTime);
     this.timestamp$?.next(serverTime.getTime());
     if (serverTime.getHours() < 11) {
       const nextEligibleTime = this.get11am(new Date());

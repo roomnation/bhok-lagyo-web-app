@@ -1,4 +1,4 @@
-import { DocumentData, FirestoreDataConverter, PartialWithFieldValue, QueryDocumentSnapshot, SetOptions, SnapshotOptions, WithFieldValue } from "@angular/fire/firestore"
+import { DocumentData, FirestoreDataConverter, PartialWithFieldValue, QueryDocumentSnapshot, SetOptions, SnapshotOptions, Timestamp, WithFieldValue } from "@angular/fire/firestore"
 
 export interface Message {
     id?: string,
@@ -31,10 +31,12 @@ export class MessageConverter implements FirestoreDataConverter<Message> {
     }
 
     fromFirestore(snapshot: QueryDocumentSnapshot<DocumentData>, options?: SnapshotOptions): Message {
+        const data = snapshot.data()
         return {
-            ...snapshot.data(),
-            messageType: snapshot.data()['messageType'] ?? MessageType.text,
-            sentByMe: snapshot.data()['from'] == this.me       
+            ...data,
+            messageType: data['messageType'] ?? MessageType.text,
+            sentByMe: data['from'] == this.me,
+            timestamp: new Date(data['timestamp'].toMillis())
         }
     }
 }
