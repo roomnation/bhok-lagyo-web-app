@@ -1,14 +1,11 @@
-<div
-  class="bg-white w-96 rounded-xl shadow-xl flex flex-col-reverse px-4"
-  style="height: 38em"
->
-  <div>
+<div class="bg-white w-96 rounded-xl shadow-xl flex flex-col-reverse">
+  <div class="px-4">
     <form (submit)="onSubmit(); $event.preventDefault()" autocomplete="off">
       <mat-form-field appearance="outline" class="w-full">
         <input
           matInput
           placeholder="message"
-          [formControl]="message"
+          [formControl]="messageForm"
           required
         />
         <mat-icon matSuffix class="text-blue-500">send</mat-icon>
@@ -16,23 +13,46 @@
       <input type="submit" hidden />
     </form>
   </div>
-  <div class="flex-1 py-4 overflow-y-auto flex flex-col space-y-4">
-    <ng-container *ngIf="messages$ | async as messages">
-      <ng-container *ngFor="let msg of messages">
-        <!-- action message -->
-        <div *ngIf="msg.messageType==1" class="text-base font-light text-gray-500">{{msg.text}}</div>
-        <!-- text message by other sender-->
-        <div *ngIf="msg.messageType==2 && !msg.sentByMe" class="flex flex-row space-x-2 items-center">
-          <div>{{msg.displayName}}</div>
-          <div class="border-2 rounded-lg p-2">{{msg.text}}</div>
+  <div
+    class="py-4 overflow-y-scroll flex flex-col-reverse gap-1 px-4 no-scrollbar"
+    style="height: 33em"
+  >
+    <ng-container *ngFor="let msg of messages; let i = index">
+      <!-- action message -->
+      <div
+        *ngIf="msg.messageType == 1"
+        class="text-base font-light text-gray-500"
+      >
+        {{ msg.text }}
+      </div>
+      <!-- text message by other sender-->
+      <div
+        *ngIf="msg.messageType == 2 && !msg.sentByMe"
+        class="flex flex-row gap-3 items-center"
+      >
+        <!-- {{ i == (messages?.length ?? 0) - 1 }} -->
+        <!-- {{ i > 0 && (messages ?? [])[i + 1]?.from != (messages ?? [])[i].from }} -->
+        <div [ngClass]="{ invisible: !groupTogether(i) }">
+          {{ msg.displayName }}
         </div>
-        <!-- text message by me-->
-        <div *ngIf="msg.messageType==2 && msg.sentByMe" class="flex flex-row-reverse space-x-4">
-          <div class="rounded-lg p-2 bg-blue-400 text-white">
-            {{msg.text}}
-          </div>
+        <div class="border-2 rounded-lg p-2">{{ msg.text }}</div>
+        <div *ngIf="groupTogether(i)" class="text-sm text-gray-400">
+          {{ msg.timestamp | date: "shortTime" }}
         </div>
-      </ng-container>
+      </div>
+      <!-- text message by me-->
+      <div
+        *ngIf="msg.messageType == 2 && msg.sentByMe"
+        class="flex flex-row-reverse gap-1 items-center"
+      >
+        <div class="rounded-lg p-2 bg-blue-400 text-white">
+          {{ msg.text }}
+        </div>
+        <div *ngIf="groupTogether(i)" class="text-sm text-gray-400">
+          {{ msg.timestamp | date: "shortTime" }}
+        </div>
+      </div>
+      <div class="m-2" *ngIf="groupTogether(i)"></div>
     </ng-container>
   </div>
 </div>

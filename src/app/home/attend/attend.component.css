@@ -1,0 +1,11 @@
+div#message {
+    @apply fixed bottom-0 right-0 m-12
+}
+
+.message-opened {
+    @apply scale-100 translate-y-0 translate-x-0
+}
+
+.message-closed {
+    @apply scale-0 translate-y-1/2 translate-x-1/2
+}

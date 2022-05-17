@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Message } from './message';
 import { MessageService } from './message.service';
 
@@ -9,20 +9,35 @@ import { MessageService } from './message.service';
   templateUrl: './message.component.html',
   styleUrls: ['./message.component.css']
 })
-export class MessageComponent implements OnInit {
-  message = new FormControl('')
-  messages$?: Observable<Message[]>;
+export class MessageComponent implements OnInit, OnDestroy {
+  messageForm = new FormControl('')
+  messages?: Message[];
+  subscription?: Subscription;
 
   constructor(private messageService: MessageService) { }
 
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
+
   ngOnInit(): void {
-    this.messages$ = this.messageService.getMessages$();
+    this.subscription = this.messageService.getMessages$().subscribe({
+      next: (messages) => {
+        this.messages = messages.reverse();
+      }
+    });
+  }
+
+  groupTogether(i: number): boolean {
+    return i == (this.messages?.length ?? 0) - 1 ||
+      (i > 0 &&
+        (this.messages ?? [])[i + 1]?.from != (this.messages ?? [])[i].from)
   }
 
   onSubmit() {
-    if(this.message.valid) {
-      this.messageService.sendMessage(this.message.value);
-      this.message.reset();
+    if (this.messageForm.valid) {
+      this.messageService.sendMessage(this.messageForm.value);
+      this.messageForm.reset();
     }
   }
 }
